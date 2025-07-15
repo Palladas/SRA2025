@@ -1,4 +1,4 @@
-\classdef Node
+classdef Node
     properties
         row         % Row coordinate of the node in the grid
         col         % Column coordinate of the node in the grid

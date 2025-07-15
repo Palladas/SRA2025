@@ -70,7 +70,7 @@ fprintf('Terrain generation complete. Grid size: %d, Sector size: %d\n', gridSiz
 % --- Generate Altitude/Elevation Grid (Z-values) using Perlin Noise ---
 fprintf('Generating altitude grid using Perlin noise...\n');
 % Parameters for Perlin Noise (you can adjust these)
-scale = 0.1; % Controls "zoom" level of noise
+scale = 0.02; % Controls "zoom" level of noise
 octaves = 4; % Number of noise layers
 persistence = 0.5; % How much each octave contributes
 lacunarity = 2.0; % How much larger each octave is
@@ -98,7 +98,7 @@ end
 % Normalize and scale altitude values (e.g., to a range of 0 to 100)
 minAlt = min(altitudeGrid(:));
 maxAlt = max(altitudeGrid(:));
-altitudeGrid = (altitudeGrid - minAlt) / (maxAlt - minAlt) * 100; % Scale to 0-100 for better visualization and cost impact
+altitudeGrid = (altitudeGrid - minAlt) / (maxAlt - minAlt) * 20; % Scale to 0-100 for better visualization and cost impact
 
 fprintf('Altitude grid generated.\n');
 
@@ -160,10 +160,11 @@ hold off;
 
 % --- Visualize Altitude Map ---
 figure('Name', 'Generated Altitude Map', 'NumberTitle', 'off', 'Color', [0.95 0.95 0.95]);
+surf(altitudeGrid)
+hold on;
 imagesc(altitudeGrid);
 colormap('parula'); % Or 'jet', 'gray', etc. for elevation
 colorbar;
-axis equal;
 xlim([0.5, gridSize + 0.5]); % Adjust limits for imagesc
 ylim([0.5, gridSize + 0.5]); % Adjust limits for imagesc
 set(gca, 'YDir', 'normal');

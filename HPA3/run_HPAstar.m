@@ -170,6 +170,9 @@ end
 allUniqueGateways = [allUniqueGateways{:}];
 fprintf('Identified %d unique gateway nodes.\n', length(allUniqueGateways));
 
+%{
+tic
+
 % Precompute Intra-Sector Paths (Using A* within sector bounds)
 intraSectorPathsCache = containers.Map('KeyType', 'char', 'ValueType', 'any'); 
 
@@ -228,6 +231,9 @@ for sRow = 1:numSectorsY
     end
 end
 fprintf('Finished precomputing intra-sector paths. Cache size: %d\n', intraSectorPathsCache.size);
+toc
+%}
+
 
 
 % Build Abstract Graph (nodes are Gateway Node objects, edges have precomputed costs)
@@ -238,6 +244,8 @@ for k = 1:length(allUniqueGateways)
     abstractGraph(allUniqueGateways(k).key) = []; % Initialize empty adjacency list for each gateway
 end
 
+%{
+tic
 % Add Intra-sector edges (from cache)
 fprintf('Building intra-sector edges...\n');
 keys_cache = keys(intraSectorPathsCache);
@@ -308,6 +316,8 @@ for r = 1:gridSize
     end
 end
 fprintf('Finished building abstract graph edges. Total abstract nodes: %d\n', abstractGraph.size);
+toc
+%}
 
 % --- Initial Visualization Setup ---
 hFig = figure('Name', 'HPA* - Click START then GOAL. Press ''r'' to Reset', ...
@@ -399,6 +409,7 @@ set(ax, 'XTick', 0:gridSize, 'YTick', 0:gridSize); grid on; box on;
 title('HPA*: Click START then GOAL. Press ''r'' to Reset.');
 xlabel('X-coordinate'); ylabel('Y-coordinate');
 
+
 % Initialize legend handles for static map elements
 terrainLegendHandles = []; terrainLegendLabels = {};
 for k = 1:length(terrainTypes)
@@ -449,6 +460,7 @@ if ~isempty(allUniqueGateways)
     end
 end
 
+%{
 abstractEdgePlotHandle_invisible = gobjects(0); % Initialize as empty graphics object array
 if abstractGraph.Count > 0
     abstract_keys = keys(abstractGraph);
@@ -465,6 +477,7 @@ if abstractGraph.Count > 0
         end
     end
 end
+%}
 
 % Set the initial axis limits if necessary
 xlim(ax, [0, gridSize]);
@@ -476,7 +489,7 @@ box(ax, 'on');
 
 valid_idx_initial = isvalid(baseLegendHandles);
 legend(baseLegendHandles(valid_idx_initial), baseLegendLabels(valid_idx_initial), 'Location', 'eastoutside', 'FontSize', 9, 'AutoUpdate', 'off');
-
+%{
 % --- Define the main interactive plotting function ---
 plotAndFindPath = @(ax_handle) local_plotAndFindPath(...
     ax_handle, detailedMap, allGatewaysMap, gatewaysInSector, intraSectorPathsCache, ...
@@ -718,3 +731,4 @@ function local_keyPressCallback(src, event, plotAndFindPath_func, ax_handle)
    
     set(src, 'WindowButtonDownFcn', original_button_down_fcn);
 end
+%}
