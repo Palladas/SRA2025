@@ -1,13 +1,5 @@
-% Priority queue realized by heap
-% Ref: https://algo.itcharge.cn/01.Array/02.Array-Sort/07.Array-Heap-Sort/
-
-% XiaoCY, 2024-10-22
-
-%%
 classdef PriorityQueue < handle
     properties
-        % data = {{data1}, {priority1}; {data2}, {priority2}; ...}
-        %   where, priority1 < prority2 < ...
         data = {};
         size = 0;
     end

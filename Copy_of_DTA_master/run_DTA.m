@@ -4,18 +4,16 @@ close all;
 
 fprintf('Starting Hierarchical Pathfinding A* (HPA*) process...\n');
 
-% --- 1. Generate and Load Terrain Data ---
-% This ensures a new random terrain map is created every time.
+% --- Generate and Load Terrain Data ---
 fprintf('Generating new terrain map...\n');
 run('terrain_generation.m'); % Make sure terrain_generation.m is in path
 load('terrain_data.mat');
 fprintf('Loaded terrain data. Grid size: %d, Sector size: %d\n', gridSize, sectorSize);
 
 % Create a GridMap object for low-level pathfinding
-% The obstacleCost is 'inf' by default in GridMap, which is appropriate for impassable terrain.
 detailedMap = GridMap(terrainGrid, terrainTypes);
 
-% --- 2. Build the Abstract Graph ---
+% --- Build the Abstract Graph ---
 fprintf('Building the abstract graph (regions, nodes, edges)...\n');
 
 regions = {}; % Stores information about each identified region (node in G')
@@ -29,7 +27,7 @@ for sRow = 1:numSectorsY
     for sCol = 1:numSectorsX
         startSectorRow = (sRow - 1) * sectorSize + 1;
         endSectorRow = sRow * sectorSize;
-        startSectorCol = (sCol - 1) * sectorSize + 1; % Corrected for 1-based indexing
+        startSectorCol = (sCol - 1) * sectorSize + 1;
         endSectorCol = sCol * sectorSize;
 
         for r = startSectorRow:endSectorRow
@@ -146,7 +144,7 @@ for r = 1:gridSize
 end
 fprintf('Finished building abstract graph edges.\n');
 
-% --- 3. Initial Visualization Setup (without immediate user input) ---
+% --- Initial Visualization Setup (without immediate user input) ---
 hFig = figure('Name', 'DTA', ...
               'NumberTitle', 'off', 'Color', [0.95 0.95 0.95]);
 ax = gca;
@@ -224,8 +222,6 @@ valid_idx_initial = isvalid(baseLegendHandles);
 legend(baseLegendHandles(valid_idx_initial), baseLegendLabels(valid_idx_initial), 'Location', 'eastoutside', 'FontSize', 9, 'AutoUpdate', 'off'); % AutoUpdate off is crucial
 
 % --- Define the main interactive plotting function ---
-% This function will be called initially and upon reset
-% We need to pass ALL variables from the main script that local_plotAndFindPath will use.
 plotAndFindPath = @(ax_handle) local_plotAndFindPath(...
     ax_handle, labeledGrid, detailedMap, regions, abstractGraph, ...
     terrainGrid, terrainTypes, baseLegendHandles, baseLegendLabels, ... % Pass base legend handles
@@ -304,7 +300,7 @@ function local_plotAndFindPath(ax, labeledGrid, detailedMap, regions, abstractGr
 
     title(sprintf('DTA: Pathfinding from (%d,%d) to (%d,%d)', start_row, start_col, goal_row, goal_col));
 
-    % --- 4. High-Level Pathfinding (A* on Abstract Graph) ---
+    % --- High-Level Pathfinding (A* on Abstract Graph) ---
     fprintf('Performing high-level A* search on the abstract graph...\n');
 
     startRegionID = labeledGrid(start_row, start_col);
@@ -328,7 +324,7 @@ function local_plotAndFindPath(ax, labeledGrid, detailedMap, regions, abstractGr
         fprintf('Path (Region IDs): %s\n', mat2str(abstract_path_regions));
     end
 
-    % --- 5. Low-Level Path Refinement ---
+    % --- Low-Level Path Refinement ---
     fprintf('Refining high-level path into detailed low-level path...\n');
 
     detailed_final_path = [];
@@ -352,7 +348,7 @@ function local_plotAndFindPath(ax, labeledGrid, detailedMap, regions, abstractGr
                 next_abstract_region_id = abstract_path_regions(i+1);
                 
                 % Define transition points for low-level A*
-                % For simplicity, we'll connect the representative state of the current region
+                % For simplicity, connect the representative state of the current region
                 % to the representative state of the next region.
                 
                 % If it's the first segment, path from actual start node to current region's rep state
@@ -390,7 +386,6 @@ function local_plotAndFindPath(ax, labeledGrid, detailedMap, regions, abstractGr
                 end
                 
                 % Concatenate detailed path segments
-                % Avoid duplicating the connection point if concatenating paths
                 if i > 1 && ~isempty(detailed_final_path)
                     % Check if the first node of the new segment is the same as the last node of the previous segment
                     if detailed_segment_path(1,1) == detailed_final_path(end,1) && ...
@@ -434,13 +429,11 @@ function local_plotAndFindPath(ax, labeledGrid, detailedMap, regions, abstractGr
                'Location', 'eastoutside', 'FontSize', 9, 'AutoUpdate', 'off');
     end
     title(sprintf('HPA*: Pathfinding from (%d,%d) to (%d,%d)', start_row, start_col, goal_row, goal_col));
-    % Removed: hold off; <--- This was causing the issue
     fprintf('HPA* pathfinding cycle complete.\n');
 end
 function local_keyPressCallback(src, event, plotAndFindPath_func, ax_handle)
     if strcmp(event.Key, 'r')
         fprintf('\n''r'' pressed. Resetting path, start, and goal. Keeping the map.\n');
-        % Clear previous path/markers and re-run the pathfinding process
         plotAndFindPath_func(ax_handle);
     end
 end

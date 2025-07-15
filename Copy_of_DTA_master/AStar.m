@@ -1,8 +1,3 @@
-% AStar algorithm for path finding
-
-% XiaoCY, 2024-10-26
-
-%%
 function astar_path = AStar(map, start, goal, varargin)
     p = inputParser;
     p.KeepUnmatched = true;
@@ -23,7 +18,7 @@ function astar_path = AStar(map, start, goal, varargin)
     % find path
     open = PriorityQueue;
     open.push(start, 0);
-    closed = dictionary;        % use `containers.Map` for MATLAB version lower than R2020b
+    closed = dictionary;        
     while open.size > 0
         current = open.pop;
         closed(current.key) = current;

@@ -1,6 +1,3 @@
-% MATLAB Script: terrain_generation.m
-% This script generates a randomized, smoothed terrain grid and visualizes it.
-% It also saves the generated data for use by other scripts.
 fprintf('Starting terrain generation script...\n');
 
 % Seed the random number generator to ensure different terrains each time
@@ -31,9 +28,6 @@ for i = 1:gridSize
 end
 
 % --- Terrain Smoothing (to create grouped regions) ---
-% Applies a cellular automaton-like smoothing to create larger, more natural terrain regions.
-% Adjust numSmoothingIterations to control how "grouped" the regions are.
-% 0 = completely random, higher values = more smoothed.
 numSmoothingIterations = 5;
 for iter = 1:numSmoothingIterations
     newTerrainGrid = terrainGrid; % Create a copy to store updates for this iteration
@@ -68,7 +62,7 @@ for iter = 1:numSmoothingIterations
             end
         end
     end
-    terrainGrid = newTerrainGrid; % Update the main grid for the next iteration
+    terrainGrid = newTerrainGrid;
 end
 
 % Define sector size (controlled here)

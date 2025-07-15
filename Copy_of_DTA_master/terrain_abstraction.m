@@ -1,4 +1,4 @@
-% --- 2. Build the Abstract Graph ---
+% --- Build the Abstract Graph ---
 fprintf('Building the abstract graph (regions, nodes, edges)...\n');
 
 regions = {}; % Stores information about each identified region (node in G')

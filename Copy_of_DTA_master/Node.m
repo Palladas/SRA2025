@@ -1,8 +1,3 @@
-% Map node class(struct) inherited from `handle` to save memory
-
-% XiaoCY, 2024-10-25
-
-%%
 classdef Node < handle
     properties
         row             % row index
@@ -42,9 +37,6 @@ classdef Node < handle
             end
         end
 
-        % fake hash key
-        % Hint: MATLAB built-in `dictionary` and `containers.Map` are hash tables, 
-        %   but users only need to give a unique 'key'. Here I chose the matrix index.
         function val = key(obj)
             val = sprintf('(%d, %d)', obj.row, obj.col);
         end

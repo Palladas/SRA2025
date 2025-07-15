@@ -1,17 +1,12 @@
-% MATLAB Script: interactive_terrain_pathfinder.m
-% This script first generates a new random terrain, then loads the data,
-% allows interactive selection of a start point, calculates minimum costs,
-% and displays the costs directly on the grid cells.
-
 fprintf('Starting interactive terrain pathfinder...\n');
 
-% --- 1. Generate a NEW terrain data file ---
+% --- Generate a NEW terrain data file ---
 % This ensures a new random terrain map is created every time this script runs.
 fprintf('Generating new terrain map...\n');
 run('terrain_generation.m'); % Execute terrain_generation.m to create fresh terrain_data.mat
 fprintf('New terrain map generated and saved to terrain_data.mat.\n');
 
-% --- 2. Load the newly generated terrain data ---
+% --- Load the newly generated terrain data ---
 try
     load('terrain_data.mat');
 catch
@@ -20,7 +15,7 @@ end
 
 fprintf('Loaded terrain data. Grid size: %d\n', gridSize);
 
-% --- 3. Initial Visualization of Terrain Map for Selection ---
+% --- Initial Visualization of Terrain Map for Selection ---
 hFig = figure('Name', 'Terrain Map - Click to Select Start Point', ...
               'NumberTitle', 'off', 'Color', [0.95 0.95 0.95]);
 ax = gca; % Get current axes handle
@@ -82,7 +77,7 @@ end
 
 fprintf('Selected start point: (%d, %d). Calculating distances...\n', startRow, startCol);
 
-% --- 4. Dijkstra's Algorithm for Distance Calculation ---
+% --- Dijkstra's Algorithm for Distance Calculation ---
 % distances: Stores the minimum cost from the start point to each cell
 distances = ones(gridSize, gridSize) * inf;
 distances(startRow, startCol) = 0;
@@ -144,7 +139,7 @@ end
 
 fprintf('Finished calculating distances. Displaying results...\n');
 
-% --- 5. Visualization of Distances on Grid Cells ---
+% --- Visualization of Distances on Grid Cells ---
 set(hFig, 'Name', 'Grid Distances with Costs on Cells'); % Update figure title
 
 for i = 1:gridSize

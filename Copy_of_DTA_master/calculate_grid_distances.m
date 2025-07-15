@@ -1,17 +1,12 @@
-% MATLAB Script: calculate_grid_distances.m
-% This script calculates the minimum cost to reach every cell in the terrain grid
-% from a specified start point, using Dijkstra's algorithm.
-% Movement is restricted to 4-directional (no diagonals).
-
 fprintf('Starting grid distance calculation...\n');
 
-% --- 1. Load the generated terrain data ---
+% --- Load the generated terrain data ---
 % Make sure 'terrain_data.mat' exists from running terrain_abstraction_main.m
 load('terrain_data.mat');
 
 fprintf('Loaded terrain data. Grid size: %d\n', gridSize);
 
-% --- 2. Define Start Point ---
+% --- Define Start Point ---
 % For now, hardcode. This will be made interactive later.
 startRow = 5;
 startCol = 5;
@@ -29,18 +24,12 @@ end
 
 fprintf('Calculating distances from start point: (%d, %d)\n', startRow, startCol);
 
-% --- 3. Initialize Dijkstra's Algorithm Data Structures ---
-% distances: Stores the minimum cost from the start point to each cell
-% Initialize all distances to infinity, except the start point
+% --- Initialize Dijkstra's Algorithm Data Structures ---
 distances = ones(gridSize, gridSize) * inf;
 distances(startRow, startCol) = 0;
 
 % visited: Tracks which cells have been finalized (their minimum distance is known)
 visited = false(gridSize, gridSize);
-
-% priorityQueue: A simple way to manage cells to visit, ordered by current minimum distance
-% In a real-world scenario, you'd use a min-priority queue data structure.
-% For simplicity here, we'll iterate and find the unvisited node with min distance.
 
 % Directions for 4-directional movement (up, down, left, right)
 dr = [-1, 1, 0, 0];
@@ -102,13 +91,12 @@ end
 
 fprintf('Finished calculating distances.\n');
 
-% --- 4. Visualization of Distances ---
+% --- Visualization of Distances ---
 figure('Name', 'Grid Distances from Start Point', 'NumberTitle', 'off', 'Color', [0.95 0.95 0.95]);
 ax = gca; % Get current axes handle
 hold on;
 
 % Use a colormap for visualization
-% We'll normalize distances for color mapping, ignoring Inf values
 finiteDistances = distances(~isinf(distances));
 if isempty(finiteDistances)
     warning('No reachable cells from the start point.');
@@ -152,9 +140,9 @@ else
                       'LineWidth', 0.1);
             
             % Optionally, display the distance value on the cell
-            % text(j - 0.5, i - 0.5, sprintf('%.1f', distances(i, j)), ...
-            %      'HorizontalAlignment', 'center', 'VerticalAlignment', 'middle', ...
-            %      'FontSize', 6, 'Color', 'k');
+            text(j - 0.5, i - 0.5, sprintf('%.1f', distances(i, j)), ...
+                'HorizontalAlignment', 'center', 'VerticalAlignment', 'middle', ...
+                'FontSize', 6, 'Color', 'k');
         end
     end
     

@@ -1,7 +1,3 @@
-% Grid map in graph form
-% Ref: https://www.redblobgames.com/pathfinding/grids/graphs.html
-% XiaoCY, 2024-10-23
-%%
 classdef GridMap < handle
     properties
         terrainGrid = [];       % Stores terrain type indices (e.g., 1, 2, 3...)
@@ -104,7 +100,6 @@ classdef GridMap < handle
                         'EdgeColor', [0.8 0.8 0.8], 'LineWidth', p.Results.GridWidth, ...
                         'FaceAlpha', 1.0, 'EdgeAlpha', p.Results.GridAlpha); % Use full alpha for terrain colors
                     
-                    % Optionally display cell costs as text
                     if p.Results.ShowValue
                         cellCost = obj.terrainTypes{currentTerrainTypeIdx}.cost;
                         if isinf(cellCost)
@@ -114,7 +109,7 @@ classdef GridMap < handle
                         end
                         text(ax_handle, x, y, costStr, 'FontSize', p.Results.FontSize, ...
                             'HorizontalAlignment', 'center', 'VerticalAlignment', 'middle', ...
-                            'Color', 'k', 'FontWeight', 'bold'); % Black text for visibility
+                            'Color', 'k', 'FontWeight', 'bold'); 
                     end
                 end
             end

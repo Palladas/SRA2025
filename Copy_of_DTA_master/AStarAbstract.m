@@ -1,24 +1,12 @@
-% AStarAbstract.m (Create this as a new file)
 function [abstract_path_regions, total_abstract_cost] = AStarAbstract(regions, abstractGraph, startRegionID, goalRegionID)
-% A* search on the abstract graph.
-% regions: Cell array of region structs.
-% abstractGraph: Adjacency list representation of the abstract graph.
-% startRegionID: ID of the starting region.
-% goalRegionID: ID of the goal region.
 
-% Data structures for A*
-% openSet: Stores {f_cost, regionID} - priority queue
-% closedSet: Stores regionIDs already evaluated
-% gScore: Map from regionID to g_cost (cost from start to current region)
-% cameFrom: Map from regionID to previous regionID in optimal path
-
-    openSet = containers.Map('KeyType', 'double', 'ValueType', 'double'); % f_cost for regionID
-    openSet(startRegionID) = 0 + heuristic(startRegionID, goalRegionID, regions); % f_cost = g_cost + h_cost
+    openSet = containers.Map('KeyType', 'double', 'ValueType', 'double');
+    openSet(startRegionID) = 0 + heuristic(startRegionID, goalRegionID, regions); 
 
     gScore = containers.Map('KeyType', 'double', 'ValueType', 'double');
     gScore(startRegionID) = 0;
 
-    cameFrom = containers.Map('KeyType', 'double', 'ValueType', 'double'); % Key: current regionID, Value: previous regionID
+    cameFrom = containers.Map('KeyType', 'double', 'ValueType', 'double'); 
 
     evaluated = false(length(regions), 1); % Tracks if a region is in closedSet/has been processed
 
@@ -39,12 +27,12 @@ function [abstract_path_regions, total_abstract_cost] = AStarAbstract(regions, a
             path = [];
             current = goalRegionID;
             while isKey(cameFrom, current)
-                path = [current, path]; %#ok<AGROW>
+                path = [current, path]; 
                 current = cameFrom(current);
             end
             abstract_path_regions = [current, path];
             total_abstract_cost = gScore(goalRegionID);
-            return; % Path found!
+            return; % path found!
         end
 
         evaluated(currentRegionID) = true; % Add to closed set conceptually
@@ -59,7 +47,7 @@ function [abstract_path_regions, total_abstract_cost] = AStarAbstract(regions, a
                 continue;
             end
 
-            if evaluated(neighborRegionID) % Already processed
+            if evaluated(neighborRegionID) 
                 continue;
             end
 
