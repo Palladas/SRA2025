@@ -5,13 +5,18 @@ function TopNode = topKey(Open)
 
     % search for node with min cost
     [~, sortInds] = sortrows(keys);
-    topKeyInd = sortInds(1);
-
-    TopNode = Open.List(topKeyInd);
-    TopNode.ind = topKeyInd;
-
-    if keys(topKeyInd, 1) == inf
+    if isempty(sortInds)
         disp('No Path!')
+        TopNode = -1;
+        return
     end
-
+        topKeyInd = sortInds(1);
+    
+        TopNode = Open.List(topKeyInd);
+        TopNode.ind = topKeyInd;
+    
+        if keys(topKeyInd, 1) == inf
+            disp('No Path!')
+        end
+    
 end

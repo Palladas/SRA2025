@@ -1,0 +1,28 @@
+clear;
+clc;
+close all;
+
+gridSize = 200;
+displayPlot = false;
+genTerrain = true;
+randomST = true;
+figure;
+hold on;
+xlabel('Grid Size');
+ylabel('Average Runtime');
+title('Average Runtime vs Grid Size');
+
+
+for gridSize = 1:200
+    t = 0;
+    c = 0;
+    for trial = 1:100
+        [Model, Sol] = threeDDStar(gridSize, displayPlot, genTerrain, randomST);
+        if ~isfield(Model, 'distType')
+            continue
+        end
+        t = t + Sol.runTime
+        
+    end
+    plot(gridSize,t/100);
+end 

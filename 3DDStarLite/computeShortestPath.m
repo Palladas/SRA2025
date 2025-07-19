@@ -1,4 +1,4 @@
-function [G, RHS, Open, Start] = computeShortestPath(G, RHS, Open, Start, Model)
+function [G, RHS, Open, Start,v] = computeShortestPath(G, RHS, Open, Start, Model)
     % computeShortestPath between current startNode and targetNode
 
     % select top key
@@ -6,8 +6,10 @@ function [G, RHS, Open, Start] = computeShortestPath(G, RHS, Open, Start, Model)
 
     % update start_key
     Start.key = min(G(Start.nodeNumber), RHS(Start.nodeNumber)) * [1; 1] + [Model.km; 0];
+    v = 0;
 
     while compareKeys(TopNode.key, Start.key) || RHS(Start.nodeNumber) ~= G(Start.nodeNumber)
+        v = v+1;
 
         k_old = TopNode.key;
         k_new = min(G(TopNode.nodeNumber), RHS(TopNode.nodeNumber)) + [TopNode.hCost + Model.km; 0];
@@ -37,6 +39,10 @@ function [G, RHS, Open, Start] = computeShortestPath(G, RHS, Open, Start, Model)
 
         % select top key
         TopNode = topKey(Open);
+        if ~isfield(TopNode, 'ind')
+            Start = -1;
+            return
+        end
 
         % update start_key
         Start.key = min(G(Start.nodeNumber), RHS(Start.nodeNumber)) * [1; 1] + [Model.km; 0];
