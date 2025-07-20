@@ -2,7 +2,7 @@ clear;
 clc;
 close all;
 
-%%{
+
 displayPlot = false;
 genTerrain = true;
 randomST = true;
@@ -10,24 +10,33 @@ figure;
 hold on;
 xlabel('Grid Size');
 ylabel('Average Nodes Visited');
-title('Average Nodes Visited vs Grid Size');
-times = zeros(18,1);
+title('Average Nodes Visited vs Number of Dynamic Obstacles');
+times = zeros(51,1);
+gridSize = 64;
+maxObst = 50;
 
-for gridSize = 3:20
+for numObst = 0:maxObst
     t = 0;
     c = 0;
     for trial = 1:30
-        [Model, Sol] = threeDDStar(10*gridSize, displayPlot, genTerrain, randomST);
+        [Model, Sol] = threeDDStar(gridSize, displayPlot, genTerrain, randomST, numObst);
         if ~isfield(Model, 'distType')
             continue
         end
-        t = t + Sol.nodesVisited
-        c = c+1
-        disp(10*gridSize)
+        t = t + Sol.nodesVisited;
+        c = c+1;
+        disp(numObst)
+        disp(trial)
     end
-    times(gridSize-2) = t/c;
+    times(numObst+1) = t/c;
 end 
-plot(10*[3:20],times)
-%%}
+plot([0:maxObst],times)
 
-%[Model, Sol] = threeDDStar(30, true, true, true);
+
+%[Model, Sol] = threeDDStar(64, true, true, true, 5);
+
+%{
+[terrainGrid, costGrid] = terrainGen(32);
+altitudeGrid = altitudeGen(32);
+visAlti(altitudeGrid,terrainGrid)
+%}

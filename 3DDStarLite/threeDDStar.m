@@ -1,4 +1,4 @@
-function [Model, Sol] = threeDDStar(gridSize, displayPlot, genTerrain, randomST)
+function [Model, Sol] = threeDDStar(gridSize, displayPlot, genTerrain, randomST, dynamicObst)
 %THREEDDSTAR Summary of this function goes here
 %   Detailed explanation goes here
 arguments (Input)
@@ -6,6 +6,7 @@ arguments (Input)
     displayPlot
     genTerrain
     randomST
+    dynamicObst
 end
 
 arguments (Output)
@@ -122,13 +123,14 @@ fprintf('Robot initialized at position (%d, %d) with altitude %.2f.\n', Robot.xs
 %-------Run D* Lite--------
 
 %% settings
-Model.expandMethod = 'heading'; % random or heading
+Model.expandMethod = 'random'; % random or heading
 Model.distType = 'euclidean'; % euclidean or manhattan;
 Model.adjType = '8adj'; % 4adj or 8adj
 Model.prioType = 'balanced'; %speed, eff, balanced
 
 Model = create3DModel(Model);
 Model = new3DObstacles(Model,xD,yD);
+Model.dObstCount = dynamicObst;
 tic
 [Model, Path] = my3DDstarLite(Model, displayPlot);
 if ~isfield(Model, 'distType')

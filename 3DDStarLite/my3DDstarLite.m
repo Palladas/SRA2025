@@ -25,6 +25,15 @@ function [Model, Path] = my3DDstarLite(Model, displayPlot)
         return
     end
     currPath = genCurrPath(Start,Model,G,currentDir);
+    x = currPath.coords(:,1);
+    y = currPath.coords(:,2);
+    pLength = length(x);
+    if Model.dObstCount>0 && pLength>1
+        randInd = randperm(pLength-1, min(Model.dObstCount,pLength-1));
+        xD = x(randInd)
+        yD = y(randInd)
+        Model = new3DObstacles(Model,xD,yD);
+    end
     multiPath(1:size(currPath.coords,1),1:2,t) = currPath.coords;
     x = currPath.coords(:,1);
     y = currPath.coords(:,2);
@@ -96,6 +105,10 @@ function [Model, Path] = my3DDstarLite(Model, displayPlot)
         return
        end
        currPath = genCurrPath(Start,Model,G,currentDir);
+       if ~isfield(currPath, 'coords')
+        Model = -1;
+        return
+       end
        multiPath(1:size(currPath.coords,1),1:2,t) = currPath.coords;
        v = v+temp;
 

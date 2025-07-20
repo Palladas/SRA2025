@@ -10,8 +10,15 @@ end
 
 
 currPath.nodeNumbers = [Start.nodeNumber];
+it = 0;
 
 while Start.nodeNumber ~= Model.Robot.targetNode
+    it = it + 1;
+    if it >Model.Map.lim
+        currPath = -1;
+        fprintf("No Possible Path")
+        return
+    end
     sucNodes = Model.Successors{Start.nodeNumber,1};
 
     dTheta = turnCost(Start.nodeNumber, sucNodes, Model, currentDir);
